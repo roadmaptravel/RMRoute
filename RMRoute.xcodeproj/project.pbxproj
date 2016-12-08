@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		D40E1C9E1DF953E000472759 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40E1C9D1DF953E000472759 /* AppDelegate.swift */; };
+		D4575F801DF95AB300E731DF /* RMRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4575F7F1DF95AB300E731DF /* RMRoute.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		D40E1C9A1DF953E000472759 /* RMRoute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RMRoute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D40E1C9D1DF953E000472759 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D40E1CA91DF953E000472759 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D4575F7F1DF95AB300E731DF /* RMRoute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RMRoute.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 		D40E1CAF1DF9540B00472759 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				D4575F7F1DF95AB300E731DF /* RMRoute.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -130,6 +133,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4575F801DF95AB300E731DF /* RMRoute.swift in Sources */,
 				D40E1C9E1DF953E000472759 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -239,7 +243,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Roadmap.RMRoute;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -252,7 +256,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Roadmap.RMRoute;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -275,6 +279,7 @@
 				D40E1CAE1DF953E000472759 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

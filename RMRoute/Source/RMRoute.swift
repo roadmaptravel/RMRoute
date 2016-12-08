@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 @objc enum RMRouteAnimation: Int {
 	case push = 0
@@ -17,9 +18,9 @@ class RMRoute: NSObject {
 	
 	private static let shared = RMRoute()
 	
-	var registry:[String:(UIViewController, RMRouteAnimation, [AnyObject]) -> Void] = [:]
+	private var registry:[String:(UIViewController, RMRouteAnimation, [AnyObject]) -> Void] = [:]
 	
-	func register(path: String, action: (UIViewController, RMRouteAnimation, [AnyObject]) -> Void) {
+	private func register(path: String, action: (UIViewController, RMRouteAnimation, [AnyObject]) -> Void) {
 		// Save route to registry
 		registry[path] = action
 	}
@@ -64,7 +65,7 @@ class RMRoute: NSObject {
 	
 	// MARK: - Public accessor
 	
-	@objc static func register(path: String, action: (UIViewController, RMRouteAnimation, [AnyObject]) -> Void) {
+	static func register(path: String, action: (UIViewController, RMRouteAnimation, [AnyObject]) -> Void) {
 		return RMRoute.shared.register(path, action: action)
 	}
 	
@@ -85,7 +86,7 @@ extension UIViewController {
 			self.navigationController?.pushViewController(to, animated: true)
 			break
 		case .present:
-			let nc = RMNavigationController(rootViewController: to)
+			let nc = UINavigationController(rootViewController: to)
 			self.presentViewController(nc, animated: true, completion: nil)
 			break
 		}
