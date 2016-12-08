@@ -5,13 +5,17 @@
 
 RMRoute is a lightweight implementation to use routes in your iOS application.
 
-- [Features](#features)
+- [Summary](#summary)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
     - **Intro -** [Making a Request](#making-a-request), [Response Handling](#response-handling), [Response Validation](#response-validation), [Response Caching](#response-caching)
 - [Credits](#credits)
 - [License](#license)
+
+## Summary
+
+RMRoute makes it easy to provide access to all your features from anywhere in your app. With bigger applications it's sometimes handy to have entry points to your features, without referencing to them by class.
 
 ## Requirements
 
@@ -53,6 +57,41 @@ $ pod install
 
 If you prefer not to use either of the aforementioned dependency managers, you can integrate Alamofire into your project manually.
 
----
-
 ## Usage
+
+### Registering a route
+
+#### Simple registration
+
+```swift
+import RMRoute
+
+RMRoute.register("about") { (delegate, animation, params) in
+			
+	// Just show the about vc
+	let vc = AboutViewController()
+	delegate.animate(vc, animation: animation) // This is an UIViewController extension which handles the animation type
+}
+```
+
+```objc
+[RMRoute register:@"about" action:^(UIViewController *delegate, RMRouteAnimation animation, NSArray *params) {
+		
+	// Just show the about vc
+	AboutViewController *vc = [[AboutViewController alloc] init];
+	[delegate animate:vc animation:animation];
+}];
+```
+
+#### More advanced registration
+
+
+
+## Credits
+
+
+
+## License
+
+
+
