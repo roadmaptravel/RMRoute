@@ -9,12 +9,12 @@
 import Foundation
 import UIKit
 
-@objc enum RMRouteAnimation: Int {
+@objc public enum RMRouteAnimation: Int {
 	case push = 0
 	case present = 1
 }
 
-class RMRoute: NSObject {
+public class RMRoute: NSObject {
 	
 	private static let shared = RMRoute()
 	
@@ -65,18 +65,18 @@ class RMRoute: NSObject {
 	
 	// MARK: - Public accessor
 	
-	static func register(path: String, action: (UIViewController, RMRouteAnimation, [AnyObject]) -> Void) {
+	public static func register(path: String, action: (UIViewController, RMRouteAnimation, [AnyObject]) -> Void) {
 		return RMRoute.shared.register(path, action: action)
 	}
 	
-	static func navigate(to: String, delegate: UIViewController, animation: RMRouteAnimation) -> Bool {
+	public static func navigate(to: String, delegate: UIViewController, animation: RMRouteAnimation) -> Bool {
 		return RMRoute.shared.navigate(to, delegate: delegate, animation: animation)
 	}
 }
 
 extension UIViewController {
 	
-	func navigate(to: String, animation: RMRouteAnimation) {
+	public func navigate(to: String, animation: RMRouteAnimation) {
 		RMRoute.shared.navigate(to, delegate: self, animation: animation)
 	}
 }
