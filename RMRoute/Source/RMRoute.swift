@@ -74,22 +74,3 @@ class RMRoute: NSObject {
 	}
 }
 
-extension UIViewController {
-	
-	func navigate(to: String, animation: RMRouteAnimation) {
-		RMRoute.navigate(to, delegate: self, animation: animation)
-	}
-	
-	func animate(to: UIViewController, animation: RMRouteAnimation) {
-		switch animation {
-		case .push:
-			self.navigationController?.pushViewController(to, animated: true)
-			break
-		case .present:
-			let nc = UINavigationController(rootViewController: to)
-			self.presentViewController(nc, animated: true, completion: nil)
-			break
-		}
-	}
-}
-
