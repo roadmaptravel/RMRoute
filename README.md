@@ -10,8 +10,8 @@ RMRoute is a lightweight implementation to use routes in your iOS application.
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
-    - **Registering routes -** [Simple registration (without parameters)](#simple-registration-(without-parameters)), [More advanced registration (with parameters)](#more-advanced-registration-(with-parameters))
-    - **Calling routes -** [Making a Request](#making-a-request), [Response Handling](#response-handling), [Response Validation](#response-validation), [Response Caching](#response-caching)
+    - **Registering routes -** [Simple registration (without parameters)](#simple-registration), [More advanced registration (with parameters)](#more-advanced-registration)
+    - **Calling routes -** [Simple call](#simple-call), [More advanced call](#more-advanced-call)
 - [Credits](#credits)
 - [License](#license)
 
@@ -69,7 +69,8 @@ If you prefer not to use either of the aforementioned dependency managers, you c
 
 ### Registering a route
 
-#### Simple registration (without parameters)
+#### Simple registration
+> Without parameters
 
 ```swift
 import RMRoute
@@ -91,7 +92,8 @@ RMRoute.register("about") { (delegate, animation, params) in
 }];
 ```
 
-#### More advanced registration (with parameters)
+#### More advanced registration
+> With parameters
 
 ```swift
 import RMRoute
@@ -123,7 +125,8 @@ RMRoute.register("faq/{itemId}") { (delegate, animation, params) in
 
 ### Calling a route
 
-#### Simple call (without parameters)
+#### Simple call
+> Without parameters
 
 ```swift
 import RMRoute
@@ -135,7 +138,8 @@ RMRoute.navigate("about", delegate: self, animation: .push)
 [RMRoute navigate:@"about" delegate:self animation:RMRouteAnimationpush];
 ```
 
-#### More advanced calling (with parameters)
+#### More advanced call
+> With parameters
 
 ```swift
 import RMRoute
