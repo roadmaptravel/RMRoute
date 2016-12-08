@@ -24,6 +24,7 @@ RMRoute makes it easy to provide access to all your features from anywhere in yo
 - [x] Registering & calling routes
 - [x] Pass parameters in route
 - [ ] Named parameters
+- [ ] Swift 3 compatible
 
 ## Requirements
 
@@ -70,7 +71,8 @@ If you prefer not to use either of the aforementioned dependency managers, you c
 ### Registering a route
 
 #### Simple registration
-> Without parameters
+
+Example without parameters
 
 ```swift
 import RMRoute
@@ -93,7 +95,8 @@ RMRoute.register("about") { (delegate, animation, params) in
 ```
 
 #### More advanced registration
-> With parameters
+
+Example with parameters
 
 ```swift
 import RMRoute
@@ -126,7 +129,8 @@ RMRoute.register("faq/{itemId}") { (delegate, animation, params) in
 ### Calling a route
 
 #### Simple call
-> Without parameters
+
+Example without parameters
 
 ```swift
 import RMRoute
@@ -139,7 +143,8 @@ RMRoute.navigate("about", delegate: self, animation: .push)
 ```
 
 #### More advanced call
-> With parameters
+
+Example with parameters
 
 ```swift
 import RMRoute
@@ -153,9 +158,11 @@ RMRoute.navigate("faq/12", delegate: self, animation: .present)
 
 ## Credits
 
-Credits to the Roadmap team, to make this all possible!
+Credits to the Roadmap team to make this all possible! Really a great team, if you're looking for a new challenge please get in contact with us! We're always open to discuss the future with a good cup of coffee!
+
 
 ## License
 
+RMRoute is released under the Apache license. See LICENSE for details.
 
 
