@@ -74,3 +74,10 @@ class RMRoute: NSObject {
 	}
 }
 
+extension UIViewController {
+	
+	func navigate(to: String, animation: RMRouteAnimation) {
+		RMRoute.shared.navigate(to, delegate: self, animation: animation)
+	}
+}
+
