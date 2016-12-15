@@ -18,9 +18,9 @@ public class RMRoute: NSObject {
 	
 	private static let shared = RMRoute()
 	
-	private var registry:[String:(UIViewController, RMRouteAnimation, [AnyObject]) -> Void] = [:]
+	private var registry:[String:(UIViewController, RMRouteAnimation, [AnyObject]) -> Bool] = [:]
 	
-	private func register(path: String, action: (UIViewController, RMRouteAnimation, [AnyObject]) -> Void) {
+	private func register(path: String, action: (UIViewController, RMRouteAnimation, [AnyObject]) -> Bool) {
 		// Save route to registry
 		registry[path] = action
 	}
@@ -52,9 +52,7 @@ public class RMRoute: NSObject {
 					let action = route.1
 					
 					// Execute action handlers with
-					action(delegate, animation, parameters)
-					
-					return true
+					return action(delegate, animation, parameters)
 				}
 			}
 		}
@@ -65,7 +63,7 @@ public class RMRoute: NSObject {
 	
 	// MARK: - Public accessor
 	
-	public static func register(path: String, action: (UIViewController, RMRouteAnimation, [AnyObject]) -> Void) {
+	public static func register(path: String, action: (UIViewController, RMRouteAnimation, [AnyObject]) -> Bool) {
 		return RMRoute.shared.register(path, action: action)
 	}
 	
@@ -76,8 +74,8 @@ public class RMRoute: NSObject {
 
 extension UIViewController {
 	
-	public func navigate(to: String, animation: RMRouteAnimation) {
-		RMRoute.shared.navigate(to, delegate: self, animation: animation)
+	public func navigate(to: String, animation: RMRouteAnimation) -> Bool {
+		return RMRoute.shared.navigate(to, delegate: self, animation: animation)
 	}
 }
 
