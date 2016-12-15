@@ -44,7 +44,7 @@ public class RMRoute: NSObject {
 				}
 				
 				// Equalize the route
-				if routeComponent.hasPrefix("{") == false && toComponent != routeComponent {
+				if routeComponent.hasPrefix("{") == false && toComponent.lowercaseString != routeComponent.lowercaseString {
 					// The components are not equal, please try next route
 					break
 				} else if i == routeComponents.count - 1 {

@@ -23,6 +23,7 @@ RMRoute makes it easy to provide access to all your features from anywhere in yo
 
 - [x] Registering & calling routes
 - [x] Pass parameters in route
+- [x] Routes case insensitive
 - [ ] Named parameters
 - [ ] Swift 3 compatible
 
@@ -82,15 +83,19 @@ RMRoute.register("about") { (delegate, animation, params) in
 	// Just show the vc
 	let vc = AboutViewController()
 	delegate.animate(vc, animation: animation) // This is an UIViewController extension which handles the animation type
+
+	return true
 }
 ```
 
 ```objc
-[RMRoute register:@"about" action:^(UIViewController *delegate, RMRouteAnimation animation, NSArray *params) {
+[RMRoute register:@"about" action:^BOOL (UIViewController *delegate, RMRouteAnimation animation, NSArray *params) {
 		
 	// Just show the vc
 	AboutViewController *vc = [[AboutViewController alloc] init];
 	[delegate animate:vc animation:animation]; // This is an UIViewController extension which handles the animation type
+
+	return YES;
 }];
 ```
 
@@ -104,25 +109,29 @@ import RMRoute
 RMRoute.register("faq/{itemId}") { (delegate, animation, params) in
 
 	guard let itemId = params[0] as? String else {
-		return
+		return false
 	}
 
 	// Just show the vc
 	let vc = FAQViewController(itemId)
 	delegate.animate(vc, animation: animation)
+
+	return true
 }
 ```
 
 ```objc
-[RMRoute register:@"faq/{itemId}" action:^(UIViewController *delegate, RMRouteAnimation animation, NSArray *params) {
+[RMRoute register:@"faq/{itemId}" action:^BOOL (UIViewController *delegate, RMRouteAnimation animation, NSArray *params) {
 
 	NSString *itemId = params[0];
 
-	if (itemId.length == 0) return;
+	if (itemId.length == 0) return NO;
 		
 	// Just show the vc
 	FAQViewController *vc = [[FAQViewController alloc] initWithItemId:itemId];
 	[delegate animate:vc animation:animation];
+
+	return YES;
 }];
 ```
 
