@@ -24,8 +24,8 @@ RMRoute makes it easy to provide access to all your features from anywhere in yo
 - [x] Registering & calling routes
 - [x] Pass parameters in route
 - [x] Routes case insensitive
+- [x] Swift 3 compatible
 - [ ] Named parameters
-- [ ] Swift 3 compatible
 
 ## Requirements
 
@@ -148,7 +148,7 @@ RMRoute.navigate("about", delegate: self, animation: .push)
 ```
 
 ```objc
-[RMRoute navigate:@"about" delegate:self animation:RMRouteAnimationpush];
+[RMRoute navigate:@"about" delegate:self animation:RMRouteAnimationPush];
 ```
 
 #### More advanced call
@@ -162,7 +162,7 @@ RMRoute.navigate("faq/12", delegate: self, animation: .present)
 ```
 
 ```objc
-[RMRoute navigate:@"faq/12" delegate:self animation:RMRouteAnimationpresent];
+[RMRoute navigate:@"faq/12" delegate:self animation:RMRouteAnimationPresent];
 ```
 
 ## Credits

@@ -10,17 +10,21 @@ import Foundation
 import UIKit
 
 @objc public enum RMRouteAnimation: Int {
-	case push = 0
-	case present = 1
+	case push, present
 }
 
 public class RMRoute: NSObject {
 	
 	private static let shared = RMRoute()
 	
-	private var registry:[String:(UIViewController, RMRouteAnimation, [AnyObject]) -> Bool] = [:]
+	private var registry:[String:(UIViewController, RMRouteAnimation, [String]) -> Bool] = [:]
 	
-	private func register(path: String, action: (UIViewController, RMRouteAnimation, [AnyObject]) -> Bool) {
+	private override init() { }
+	
+	private func register(path: String, with action: @escaping (UIViewController, RMRouteAnimation, [String]) -> Bool) {
+		
+		//TODO: Warn if a duplicate is registered
+		
 		// Save route to registry
 		registry[path] = action
 	}
@@ -28,11 +32,12 @@ public class RMRoute: NSObject {
 	private func navigate(to: String, delegate: UIViewController, animation: RMRouteAnimation) -> Bool {
 		
 		// Get routes with equal components
-		let toComponents = to.componentsSeparatedByString("/")
-		let filteredRoutes = registry.filter { return $0.0.componentsSeparatedByString("/").count == toComponents.count }
+		let toComponents = to.components(separatedBy: "/")
+		
+		let filteredRoutes = registry.filter { return $0.0.components(separatedBy: "/").count == toComponents.count }
 		
 		for route in filteredRoutes {
-			let routeComponents = route.0.componentsSeparatedByString("/")
+			let routeComponents = route.0.components(separatedBy: "/")
 			var parameters = [String]()
 			
 			for i in 0 ..< routeComponents.count {
@@ -44,7 +49,7 @@ public class RMRoute: NSObject {
 				}
 				
 				// Equalize the route
-				if routeComponent.hasPrefix("{") == false && toComponent.lowercaseString != routeComponent.lowercaseString {
+				if routeComponent.hasPrefix("{") == false && toComponent.lowercased() != routeComponent.lowercased() {
 					// The components are not equal, please try next route
 					break
 				} else if i == routeComponents.count - 1 {
@@ -63,19 +68,37 @@ public class RMRoute: NSObject {
 	
 	// MARK: - Public accessor
 	
-	public static func register(path: String, action: (UIViewController, RMRouteAnimation, [AnyObject]) -> Bool) {
-		return RMRoute.shared.register(path, action: action)
+	public static func register(path: String, action: @escaping (UIViewController, RMRouteAnimation, [String]) -> Bool) {
+		return RMRoute.shared.register(path: path, with: action)
 	}
 	
 	public static func navigate(to: String, delegate: UIViewController, animation: RMRouteAnimation) -> Bool {
-		return RMRoute.shared.navigate(to, delegate: delegate, animation: animation)
+		return RMRoute.shared.navigate(to: to, delegate: delegate, animation: animation)
 	}
 }
 
-extension UIViewController {
+public extension UIViewController {
 	
-	public func navigate(to: String, animation: RMRouteAnimation) -> Bool {
-		return RMRoute.shared.navigate(to, delegate: self, animation: animation)
+	/**
+	A routing helper method on UIViewController
+	
+	When using `.push` as animation type, `self` is considered to have a `navigationController`.
+	
+	- Parameters:
+	  - to: The view controller to be shown
+	  - animation: The type of animation to be used (push or present)
+	  - animated: Whether or not the animation should actually be visualized. Default = true
+	*/
+	public func navigate(to viewController:UIViewController, with animation: RMRouteAnimation, animated:Bool = true) {
+		
+		switch animation {
+		case .present:
+			present(viewController, animated: animated)
+			break
+		case .push:
+			navigationController?.pushViewController(viewController, animated: animated)
+			break
+		}
 	}
 }
 
