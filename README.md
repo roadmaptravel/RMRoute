@@ -31,7 +31,7 @@ RMRoute makes it easy to provide access to all your features from anywhere in yo
 
 - iOS 8.0+
 - Xcode 8.0+
-- Swift 2.3
+- Swift 3.0
 
 ## Installation
 
@@ -45,11 +45,11 @@ $ gem install cocoapods
 
 > CocoaPods 1.0.0+ is required to build RMRoute.
 
-To integrate Alamofire into your Xcode project using CocoaPods, specify it in your `Podfile`:
+To integrate RMRoute into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '10.0'
+platform :ios, '8.0'
 use_frameworks!
 
 target '<Your Target Name>' do
