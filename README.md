@@ -108,7 +108,8 @@ import RMRoute
 
 RMRoute.register("faq/{itemId}") { (delegate, animation, params) in
 
-	guard let itemId = params[0] as? String else {
+	let itemId = params[0]
+	guard itemId.isEmpty == false else {
 		return false
 	}
 
