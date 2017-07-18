@@ -89,7 +89,7 @@ RMRoute.register("about") { (delegate, animation, params) in
 ```
 
 ```objc
-[RMRoute register:@"about" action:^BOOL (UIViewController *delegate, RMRouteAnimation animation, NSArray *params) {
+[RMRoute registerWithPath:@"about" action:^BOOL (UIViewController *delegate, RMRouteAnimation animation, NSArray *params) {
 		
 	// Just show the vc
 	AboutViewController *vc = [[AboutViewController alloc] init];
@@ -122,7 +122,7 @@ RMRoute.register("faq/{itemId}") { (delegate, animation, params) in
 ```
 
 ```objc
-[RMRoute register:@"faq/{itemId}" action:^BOOL (UIViewController *delegate, RMRouteAnimation animation, NSArray *params) {
+[RMRoute registerWithPath:@"faq/{itemId}" action:^BOOL (UIViewController *delegate, RMRouteAnimation animation, NSArray *params) {
 
 	NSString *itemId = params[0];
 
