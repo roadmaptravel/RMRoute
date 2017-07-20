@@ -101,7 +101,7 @@ RMRoute.register("about") { (delegate, animation, params) in
 
 #### More advanced registration
 
-Example with parameters
+Example with parameters. You can also use query string parameters: "faq/?itemId={itemId}".
 
 ```swift
 import RMRoute
@@ -160,10 +160,12 @@ Example with parameters
 import RMRoute
 
 RMRoute.navigate("faq/12", delegate: self, animation: .present)
+RMRoute.navigate("faq/?itemId=12", delegate: self, animation: .present)
 ```
 
 ```objc
 [RMRoute navigate:@"faq/12" delegate:self animation:RMRouteAnimationPresent];
+[RMRoute navigate:@"faq/?itemId=12" delegate:self animation:RMRouteAnimationPresent];
 ```
 
 ## Credits

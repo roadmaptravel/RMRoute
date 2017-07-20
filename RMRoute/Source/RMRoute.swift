@@ -44,15 +44,28 @@ public class RMRoute: NSObject {
 				let toComponent = toComponents[i]
 				let routeComponent = routeComponents[i]
 				
+				//If the component starts with `{` consider it to be a dynamic property and add it as param
 				if routeComponent.hasPrefix("{") {
 					parameters.append(toComponent)
 				}
 				
 				// Equalize the route
-				if routeComponent.hasPrefix("{") == false && toComponent.lowercased() != routeComponent.lowercased() {
+				// Skip it if it contains '{', because those components are dynamic and thus never equal
+				if routeComponent.contains("{") == false && toComponent.lowercased() != routeComponent.lowercased() {
 					// The components are not equal, please try next route
 					break
 				} else if i == routeComponents.count - 1 {
+					
+					if routeComponent.hasPrefix("?") {
+						
+						let queryItems = URLComponents(string: to)?.queryItems
+						queryItems?.forEach() { (item) in
+							if let val = item.value {
+								parameters.append(val)
+							}
+						}
+					}
+					
 					// Last component -> Route found
 					let action = route.1
 					
