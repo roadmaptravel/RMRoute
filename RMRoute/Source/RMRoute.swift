@@ -93,10 +93,12 @@ public class RMRoute: NSObject {
 		}
 		
 		for route in filteredRoutes {
-			let url = URL(string: route.0.replacingOccurrences(of: "[{}]", with: separator, options: .regularExpression))
-			guard let routeComponents = url?.pathComponents else {
+			
+			guard let routeURL = URL(string: route.0.replacingOccurrences(of: "[{}]", with: separator, options: .regularExpression)) else {
 				return false
 			}
+			
+			let routeComponents = routeURL.pathComponents
 			
 			var parameters = [String]()
 			
@@ -115,6 +117,12 @@ public class RMRoute: NSObject {
 					// The components are not equal, please try next route
 					break
 				} else if i == routeComponents.count - 1 {
+					
+					if let routeQueryParameterNames = routeURL.queryItems?.map({ $0.name }),
+						let toQueryParameterNames = to.queryItems?.map({ $0.name }),
+						routeQueryParameterNames != toQueryParameterNames {
+						break
+					}
 					
 					to.queryItems?.forEach() { (item) in
 						if let val = item.value {
