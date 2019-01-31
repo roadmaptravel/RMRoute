@@ -145,11 +145,11 @@ public class RMRoute: NSObject {
 	
 	// MARK: - Public accessor
 	
-	public static func register(path: String, action: @escaping (UIViewController, RMRouteAnimation, [String]) -> Bool) {
+	@objc public static func register(path: String, action: @escaping (UIViewController, RMRouteAnimation, [String]) -> Bool) {
 		return RMRoute.shared.register(path: path, with: action)
 	}
 	
-	public static func navigate(to: String, delegate: UIViewController, animation: RMRouteAnimation) -> Bool {
+	@objc public static func navigate(to: String, delegate: UIViewController, animation: RMRouteAnimation) -> Bool {
 		return RMRoute.shared.navigate(to: to, delegate: delegate, animation: animation)
 	}
 	
@@ -171,7 +171,7 @@ public extension UIViewController {
 	  - animation: The type of animation to be used (push or present)
 	  - animated: Whether or not the animation should actually be visualized. Default = true
 	*/
-	public func navigate(to viewController:UIViewController, with animation: RMRouteAnimation, animated:Bool = true) {
+	@objc public func navigate(to viewController:UIViewController, with animation: RMRouteAnimation, animated:Bool = true) {
 		
 		switch animation {
 		case .present:

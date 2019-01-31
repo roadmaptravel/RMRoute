@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name             = 'RMRoute'
-  spec.version          = '0.8.1'
+  spec.version          = '0.8.2'
   spec.license          = { :type => 'Apache License, Version 2.0', :file => 'LICENSE' }
   spec.homepage         = 'https://github.com/roadmaptravel/RMRoute'
   spec.authors          = { 'Roadmap' => 'appledevelopment@getroadmap.com' }
