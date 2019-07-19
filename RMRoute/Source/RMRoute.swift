@@ -176,7 +176,7 @@ public extension UIViewController {
 	  - animation: The type of animation to be used (push or present)
 	  - animated: Whether or not the animation should actually be visualized. Default = true
 	*/
-	@objc public func navigate(to viewController:UIViewController, with animation: RMRouteAnimation, animated:Bool = true) {
+	@objc func navigate(to viewController:UIViewController, with animation: RMRouteAnimation, animated:Bool = true) {
 		
 		switch animation {
 		case .present:
@@ -191,7 +191,7 @@ public extension UIViewController {
 
 public extension URL {
 	
-	public var queryItems:[URLQueryItem]? {
+	var queryItems:[URLQueryItem]? {
 		guard let components = URLComponents(url: self, resolvingAgainstBaseURL: true),
 			let queryItems = components.queryItems else {
 				return nil
