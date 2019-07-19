@@ -14,17 +14,15 @@ import UIKit
 }
 
 public class RMRoute: NSObject {
+	private typealias Action = (UIViewController, RMRouteAnimation, [String]) -> Bool
 	
 	private static let shared = RMRoute()
 	
-	private var registry:[String:(UIViewController, RMRouteAnimation, [String]) -> Bool] = [:]
+	private var registry: [String : Action] = [:]
 	
 	private override init() { }
 	
-	private func register(path: String, with action: @escaping (UIViewController, RMRouteAnimation, [String]) -> Bool) {
-		
-		//TODO: Warn if a duplicate is registered
-		
+	private func register(path: String, with action: @escaping Action) {
 		// Save route to registry
 		registry[path] = action
 	}
@@ -79,13 +77,31 @@ public class RMRoute: NSObject {
 		return false
 	}
 	
-	
 	private func navigate(to: URL, delegate: UIViewController, animation: RMRouteAnimation) -> Bool {
 		
+		guard let action = getAction(for: to) else  {
+			return false
+		}
+		
+		var parameters = [String]()
+		to.queryItems?.forEach() { (item) in
+			if let val = item.value {
+				parameters.append(val)
+			}
+		}
+		
+		return action(delegate, animation, parameters)
+	}
+	
+	private func isRegistered(url: URL) -> Bool {
+		return getAction(for: url) != nil
+	}
+	
+	private func getAction(for url: URL) -> Action? {
 		// Use some unusual string - with characters allowed in URLs - to parameterize a url
 		let separator = "---"
 		
-		let toComponents = to.pathComponents
+		let toComponents = url.pathComponents
 		
 		let filteredRoutes = registry.filter {
 			let url = URL(string: $0.0.replacingOccurrences(of: "[{}]", with: separator, options: .regularExpression))
@@ -95,21 +111,14 @@ public class RMRoute: NSObject {
 		for route in filteredRoutes {
 			
 			guard let routeURL = URL(string: route.0.replacingOccurrences(of: "[{}]", with: separator, options: .regularExpression)) else {
-				return false
+				return nil
 			}
 			
 			let routeComponents = routeURL.pathComponents
 			
-			var parameters = [String]()
-			
 			for i in 0 ..< routeComponents.count {
 				let toComponent = toComponents[i]
 				let routeComponent = routeComponents[i]
-				
-				//If the component starts with `separator` consider it to be a dynamic property and add it as param
-				if routeComponent.hasPrefix(separator) {
-					parameters.append(toComponent)
-				}
 				
 				// Equalize the route
 				// Skip it if it contains 'separator', because those components are dynamic and thus never equal
@@ -119,31 +128,27 @@ public class RMRoute: NSObject {
 				} else if i == routeComponents.count - 1 {
 					
 					if let routeQueryParameterNames = routeURL.queryItems?.map({ $0.name }),
-						let toQueryParameterNames = to.queryItems?.map({ $0.name }),
+						let toQueryParameterNames = url.queryItems?.map({ $0.name }),
 						routeQueryParameterNames != toQueryParameterNames {
 						break
 					}
 					
-					to.queryItems?.forEach() { (item) in
-						if let val = item.value {
-							parameters.append(val)
-						}
-					}
-					
-					// Last component -> Route found
+					// Last component -> Route found; return its action
 					let action = route.1
-					
-					// Execute action handlers with
-					return action(delegate, animation, parameters)
+					return action
 				}
 			}
 		}
 		
-		// Route not found
-		return false
+		// Action not found
+		return nil
 	}
 	
 	// MARK: - Public accessor
+	
+	@objc public static func isRegistered(url: URL) -> Bool {
+		return RMRoute.shared.isRegistered(url: url)
+	}
 	
 	@objc public static func register(path: String, action: @escaping (UIViewController, RMRouteAnimation, [String]) -> Bool) {
 		return RMRoute.shared.register(path: path, with: action)
