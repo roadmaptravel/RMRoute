@@ -22,6 +22,9 @@ public class RMRoute: NSObject {
 	
 	private override init() { }
 	
+	// Use some unusual string - with characters allowed in URLs - to parameterize a url
+	private static let separator = "---"
+	
 	private func register(path: String, with action: @escaping Action) {
 		// Save route to registry
 		registry[path] = action
@@ -29,118 +32,78 @@ public class RMRoute: NSObject {
 	
 	private func navigate(to: String, delegate: UIViewController, animation: RMRouteAnimation) -> Bool {
 		
-		// Get routes with equal components
-		let toComponents = to.components(separatedBy: "/")
-		
-		let filteredRoutes = registry.filter { return $0.0.components(separatedBy: "/").count == toComponents.count }
-		
-		for route in filteredRoutes {
-			let routeComponents = route.0.components(separatedBy: "/")
-			var parameters = [String]()
-			
-			for i in 0 ..< routeComponents.count {
-				let toComponent = toComponents[i]
-				let routeComponent = routeComponents[i]
-				
-				//If the component starts with `{` consider it to be a dynamic property and add it as param
-				if routeComponent.hasPrefix("{") {
-					parameters.append(toComponent)
-				}
-				
-				// Equalize the route
-				// Skip it if it contains '{', because those components are dynamic and thus never equal
-				if routeComponent.contains("{") == false && toComponent.lowercased() != routeComponent.lowercased() {
-					// The components are not equal, please try next route
-					break
-				} else if i == routeComponents.count - 1 {
-					
-					if routeComponent.hasPrefix("?") {
-						
-						let queryItems = URLComponents(string: to)?.queryItems
-						queryItems?.forEach() { (item) in
-							if let val = item.value {
-								parameters.append(val)
-							}
-						}
-					}
-					
-					// Last component -> Route found
-					let action = route.1
-					
-					// Execute action handlers with
-					return action(delegate, animation, parameters)
-				}
-			}
+		guard let url = URL(string: to) else {
+			return false
 		}
-		
-		// Route not found
-		return false
+
+		return navigate(to: url, delegate: delegate, animation: animation)
 	}
 	
 	private func navigate(to: URL, delegate: UIViewController, animation: RMRouteAnimation) -> Bool {
 		
-		guard let action = getAction(for: to) else  {
+		guard let matchingRoute = findMatchingRoute(for: to) else  {
 			return false
 		}
-		
-		var parameters = [String]()
-		to.queryItems?.forEach() { (item) in
-			if let val = item.value {
-				parameters.append(val)
-			}
-		}
-		
-		return action(delegate, animation, parameters)
+	
+		return matchingRoute.action(delegate, animation, matchingRoute.parameters)
 	}
 	
 	private func isRegistered(url: URL) -> Bool {
-		return getAction(for: url) != nil
+		return findMatchingRoute(for: url) != nil
 	}
 	
-	private func getAction(for url: URL) -> Action? {
-		// Use some unusual string - with characters allowed in URLs - to parameterize a url
-		let separator = "---"
+	private func findMatchingRoute(for url: URL) -> (action: Action, parameters: [String])? {
 		
-		let toComponents = url.pathComponents
+		let urlComponents = url.pathComponents
 		
-		let filteredRoutes = registry.filter {
-			let url = URL(string: $0.0.replacingOccurrences(of: "[{}]", with: separator, options: .regularExpression))
-			return url?.pathComponents.count == toComponents.count
+		let filteredRoutes: [(url: URL, action: Action)] = registry.compactMap { (key, value) in
+			guard let routeUrl = URL(string: key.replacingOccurrences(of: "[{}]", with: RMRoute.separator, options: .regularExpression)),
+				routeUrl.pathComponents.count == urlComponents.count else {
+				return nil
+			}
+
+			let routeQueryParameterNames = routeUrl.queryItems?.map { $0.name }
+			let urlQueryParameterNames = url.queryItems?.map { $0.name }
+			
+			if routeQueryParameterNames != urlQueryParameterNames {
+				return nil
+			}
+		
+			return (routeUrl, value)
 		}
 		
 		for route in filteredRoutes {
+			let routeComponents = route.url.pathComponents
 			
-			guard let routeURL = URL(string: route.0.replacingOccurrences(of: "[{}]", with: separator, options: .regularExpression)) else {
-				return nil
-			}
-			
-			let routeComponents = routeURL.pathComponents
+			var parameters = [String]()
 			
 			for i in 0 ..< routeComponents.count {
-				let toComponent = toComponents[i]
+				let urlComponent = urlComponents[i]
 				let routeComponent = routeComponents[i]
+				
+				if routeComponent.hasPrefix(RMRoute.separator) {
+					parameters.append(urlComponent)
+				}
 				
 				// Equalize the route
 				// Skip it if it contains 'separator', because those components are dynamic and thus never equal
-				if routeComponent.contains(separator) == false && toComponent.lowercased() != routeComponent.lowercased() {
+				if routeComponent.contains(RMRoute.separator) == false && urlComponent.lowercased() != routeComponent.lowercased() {
 					// The components are not equal, please try next route
 					break
 				} else if i == routeComponents.count - 1 {
 					
-					if let routeQueryParameterNames = routeURL.queryItems?.map({ $0.name }),
-						let toQueryParameterNames = url.queryItems?.map({ $0.name }),
-						routeQueryParameterNames != toQueryParameterNames {
-						break
+					url.queryItems?.forEach() {
+						if let val = $0.value {
+							parameters.append(val)
+						}
 					}
 					
-					// Last component -> Route found; return its action
-					let action = route.1
-					return action
+					// Last component -> Route found; return its action and parameters
+					return (route.action, parameters)
 				}
 			}
 		}
 		
-		// Action not found
 		return nil
 	}
 	
@@ -191,7 +154,7 @@ public extension UIViewController {
 
 public extension URL {
 	
-	var queryItems:[URLQueryItem]? {
+	var queryItems: [URLQueryItem]? {
 		guard let components = URLComponents(url: self, resolvingAgainstBaseURL: true),
 			let queryItems = components.queryItems else {
 				return nil
